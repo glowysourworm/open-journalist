@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net4.8</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <IsPublishable>True</IsPublishable>
+    <StartupObject>OpenJournalist.App</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\local.png" />
+    <None Remove="Images\rumble.png" />
+    <None Remove="Images\youtube.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\local.png" />
+    <Resource Include="Images\rumble.png" />
+    <Resource Include="Images\youtube.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\wpf-custom-utilities\src\WpfCustomUtilities\WpfCustomUtilities.csproj" />
+    <ProjectReference Include="..\OpenJournalist.Data\OpenJournalist.Data.csproj" />
+    <ProjectReference Include="..\OpenJournalist.Service\OpenJournalist.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+
+</Project>

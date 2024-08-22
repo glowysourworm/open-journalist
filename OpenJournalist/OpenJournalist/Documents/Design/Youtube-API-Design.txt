@@ -1,0 +1,6 @@
+﻿Youtube API Design
+------------------
+
+0) Research Youtube API packages for .NET. Also, identify URL scheme for WebAPI.
+1) Create .NET interface for a generic WebAPI adapter using overall best fit API.
+2) Come up with synchronization workflow for data from YouTube.

@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="OpenJournalist.View.ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenJournalist.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ListView HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        <GroupBox Header="Google Youtube V3 API" HorizontalAlignment="Stretch">
+            <StackPanel HorizontalAlignment="Stretch">
+                <local:PropertyTextView PropertyValue="{Binding ApiKey}" PropertyName="API Key" IsReadonly="True" />
+                <local:PropertyTextView PropertyValue="{Binding ClientID}" PropertyName="Client ID" IsReadonly="True" />
+                <local:PropertyTextView PropertyValue="{Binding ClientSecret}" PropertyName="Client Secret" IsReadonly="True" />
+            </StackPanel>
+        </GroupBox>
+    </ListView>
+</UserControl>

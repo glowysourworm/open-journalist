@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="OpenJournalist.View.VideoCommentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:OpenJournalist.Converter"
+             xmlns:youtubeViewModel="clr-namespace:OpenJournalist.ViewModel.Youtube"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:BoolVisibilityCollapseConverter x:Key="BoolVisibilityCollapseConverter" />
+
+        <!-- Thread Replies -->
+        <HierarchicalDataTemplate x:Key="CommentDataTemplate" DataType="{x:Type youtubeViewModel:YoutubeCommentViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <!-- Author Image -->
+                <Image Source="{Binding AuthorImageUrl}" />
+                
+                <!-- Author Display Name-->
+                <TextBlock Text="{Binding AuthorDisplayName}" VerticalAlignment="Center" Padding="3" Grid.Column="1">
+                    <Hyperlink Command="{Binding HyperlinkCommand}" CommandParameter="{Binding AuthorUrl}" />
+                </TextBlock>
+
+                <!-- Viewer Rating -->
+                <TextBlock VerticalAlignment="Center" Padding="3" Grid.Column="2">
+                    <Run Text="Rating(" />
+                    <Run Text="{Binding ViewerRating}" />
+                    <Run Text=") Published(" />
+                    <Run Text="{Binding PublishedDate, StringFormat={}{dd-MM-yyyy hh:mm}}" />
+                    <Run Text=") Updated(" />
+                    <Run Text="{Binding UpdatedDate, StringFormat={}{dd-MM-yyyy hh:mm}}" />
+                    <Run Text=")" />
+                </TextBlock>                
+                
+                <!-- Like Count / Moderation Status -->
+                <TextBlock VerticalAlignment="Center" Padding="3" Grid.Column="3">
+                    <Run Text="Like(" />
+                    <Run Text="{Binding LikeCount}" />
+                    <Run Text=") Mod. Status(" />
+                    <Run Text="{Binding ModerationStatus}" />
+                    <Run Text=")" />
+                </TextBlock>
+                
+                <!-- Comment TEXT (Original, Current) -->
+                <Expander Grid.ColumnSpan="4" Grid.Row="1">
+                    <Expander.HeaderTemplate>
+                        <HierarchicalDataTemplate>
+                            <StackPanel HorizontalAlignment="Stretch">
+                                
+                                <!-- Header to show when not expanded -->
+                                <xceed:TrimmedTextBlock TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch" />
+
+                                <ItemsPresenter />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </Expander.HeaderTemplate>
+
+                    <!-- Entire Text Block -->
+                    <xceed:RichTextBox IsReadOnly="True" 
+                                       Text="{Binding Display}" 
+                                       HorizontalAlignment="Stretch" 
+                                       VerticalAlignment="Stretch" />
+
+                </Expander>
+            </Grid>
+        </HierarchicalDataTemplate>
+
+        <!-- Thread Header / Comment -->
+        <HierarchicalDataTemplate x:Key="CommentThreadTemplate" DataType="{x:Type youtubeViewModel:YoutubeCommentThreadViewModel}"
+                                  ItemsSource="{Binding Replies}" ItemTemplate="{StaticResource CommentDataTemplate}">
+            <StackPanel HorizontalAlignment="Stretch">
+
+                <!-- Comment Thread Header -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <Image Source="{Binding Comment.AuthorUrl}" />
+                    <TextBlock Text="(private)" 
+                               Foreground="Red" 
+                               Visibility="{Binding Comment.IsPublic, Converter={StaticResource BoolVisibilityCollapseConverter}}" />
+                    <TextBlock>
+                        <Run Text="Reply Count (" />
+                        <Run Text="{Binding Comment.TotalReplyCount}" />
+                        <Run Text=")" />
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Comment Thread Replies -->
+                <ContentPresenter ContentTemplate="{StaticResource CommentDataTemplate}" DataContext="Comment" />
+
+                <!-- Comment Thread Replies -->
+                <ItemsPresenter />
+
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+    </UserControl.Resources>
+    <Grid>
+        <TreeView ItemsSource="{Binding CommentThreads}" ItemTemplate="{StaticResource CommentThreadTemplate}" />
+    </Grid>
+</UserControl>

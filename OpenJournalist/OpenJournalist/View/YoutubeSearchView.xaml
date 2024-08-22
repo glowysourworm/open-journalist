@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="OpenJournalist.View.YoutubeSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:view="clr-namespace:OpenJournalist.View"
+             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit">
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Youtube Search Results -->
+            <Border>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Youtube Search Filter -->
+                    <Border HorizontalAlignment="Stretch" Background="#0F000000">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="Uniform" Height="30" Source="pack://application:,,,/OpenJournalist;component/Images/youtube.png" Margin="5, 0, 0, 0" />
+                            <TextBlock FontSize="16" Foreground="DimGray" VerticalAlignment="Center" Text="Youtube Channel Search" Margin="5" />
+                            <toolkit:WatermarkTextBox x:Name="YoutubeSearchTB" 
+                                                  Watermark="Search text here..." 
+                                                  Width="300" 
+                                                  Margin="5" 
+                                                  FontSize="16" 
+                                                  VerticalContentAlignment="Center" />
+                            <Button x:Name="YoutubeSearchButton" Margin="5" Padding="5" Content="Search" FontSize="16" Click="OnYoutubeSearchButton" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Youtube Search Results -->
+                    <view:SearchResultView x:Name="YoutubeResultDoubleClick" 
+                                           SearchResultDoubleClick="OnYoutubeResultDoubleClick" 
+                                           Grid.Row="1" 
+                                           DataContext="{Binding SearchResults}" />
+                </Grid>
+            </Border>
+
+            <!-- Youtube Search Results (Local) -->
+            <Border Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Local Basic Search Filter -->
+                    <Border HorizontalAlignment="Stretch" Background="#0F000000">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="Uniform" Height="30" Source="pack://application:,,,/OpenJournalist;component/Images/local.png" Margin="5, 0, 0, 0" />
+                            <TextBlock FontSize="16" Foreground="DimGray" VerticalAlignment="Center" Text="Local Channel Search" Margin="5" />
+                            <TextBox x:Name="LocalSearchTB" Width="300" Margin="5" Padding="5" FontSize="16" VerticalContentAlignment="Center" />
+                        </StackPanel>
+                    </Border>                    
+
+
+                    <!-- Local Search -->
+                    <view:SearchResultView x:Name="YoutubeLocalResultDoubleClick" 
+                                           SearchResultDoubleClick="OnYoutubeLocalResultDoubleClick" 
+                                           Grid.Row="1" 
+                                           DataContext="{Binding LocalSearchResults}" />
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</UserControl>

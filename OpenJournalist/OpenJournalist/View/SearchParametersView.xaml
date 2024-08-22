@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="OpenJournalist.View.SearchParametersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:OpenJournalist.Converter"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:DateTimeOffsetConverter x:Key="DateTimeConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <xceed:PropertyGrid AutoGenerateProperties="True" SelectedObject="{Binding}">
+            <!--xceed:PropertyGrid.PropertyDefinitions>
+                <xceed:PropertyDefinition TargetProperties="YoutubeAPIEnable" />
+                <xceed:PropertyDefinition TargetProperties="YoutubeBasicSearch" />
+                <xceed:PropertyDefinition TargetProperties="FilterSearchType" />
+                <xceed:PropertyDefinition TargetProperties="FilterString" />
+                <xceed:PropertyDefinition TargetProperties="FilterPublishedBefore" />
+                <xceed:PropertyDefinition TargetProperties="FilterPublishedAfter" />
+                <xceed:PropertyDefinition TargetProperties="FilterFortorder" />
+            </xceed:PropertyGrid.PropertyDefinitions-->
+            <xceed:PropertyGrid.EditorDefinitions>
+                <xceed:EditorTemplateDefinition x:Name="DateTimeOffsetPicker">
+                    <xceed:EditorTemplateDefinition.TargetProperties>
+                        <xceed:TargetPropertyType Type="sys:Nullable`1[System.DateTimeOffset]" />
+                    </xceed:EditorTemplateDefinition.TargetProperties>
+                    <xceed:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <xceed:DateTimePicker Value="{Binding Value, Converter={StaticResource DateTimeConverter}}" Format="ShortDate" />
+                        </DataTemplate>
+                    </xceed:EditorTemplateDefinition.EditingTemplate>
+                </xceed:EditorTemplateDefinition>
+            </xceed:PropertyGrid.EditorDefinitions>
+        </xceed:PropertyGrid>
+    </Grid>
+</UserControl>

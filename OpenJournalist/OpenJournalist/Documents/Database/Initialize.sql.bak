@@ -1,0 +1,587 @@
+
+USE master;
+GO
+
+DROP DATABASE IF EXISTS YoutubeJournalist
+GO
+
+CREATE DATABASE YoutubeJournalist
+GO
+
+USE YoutubeJournalist;
+GO
+
+-- Our Table for helping to manage users
+Create Table "User"(
+	Id int NOT NULL IDENTITY(1,1),
+	Handle varchar(50),
+	Subsystem varchar(50),
+	Comment varchar(max),
+
+	Primary Key (Id)
+);
+GO
+
+Create Table SocialMediaLink(
+	Id int NOT NULL IDENTITY(1,1),
+	UserId int NOT NULL,
+	Handle varchar(50),
+	SocialMediaName varchar(50)
+
+	Primary Key (Id),
+	Foreign Key (UserId) References "User"(Id)
+);
+GO
+
+Create Table UserEmail(
+	Id int NOT NULL IDENTITY(1,1),
+	UserId int NOT NULL,
+	Email varchar(100),
+	Comment varchar(max),
+
+	Primary Key (Id),
+	Foreign Key (UserId) References "User"(Id)
+);
+GO
+
+Create Table Youtube_ThumbnailDetails(
+
+	Our_Id int not null IDENTITY(1,1),
+	ETag varchar(50),
+
+	Default__Url varchar(max),
+	Default__ETag varchar(50),
+	Default__Height bigint,
+	Default__Width bigint,
+
+	High_Url varchar(max),
+	High_ETag varchar(50),
+	High_Height bigint,
+	High_Width bigint,
+
+	Maxres_Url varchar(max),
+	Maxres_ETag varchar(50),
+	Maxres_Height bigint,
+	Maxres_Width bigint,
+
+	Medium_Url varchar(max),
+	Medium_ETag varchar(50),
+	Medium_Height bigint,
+	Medium_Width bigint,
+
+	Standard_Url varchar(max),
+	Standard_ETag varchar(50),
+	Standard_Height bigint,
+	Standard_Width bigint,
+
+	Primary Key(Our_Id)
+);
+
+Create Table Youtube_SearchResult(
+	Our_Id int not null IDENTITY(1,1),
+	ETag varchar(50),
+	Kind varchar(50),
+	Id_ETag varchar(50),
+	Id_Kind varchar(50),
+	Id_ChannelId varchar(50),
+	Id_VideoId varchar(50),
+	Id_PlaylistId varchar(50),
+	Snippet_ChannelId varchar(50),
+	Snippet_ChannelTitle varchar(max),
+	Snippet_Description varchar(max),
+	Snippet_ETag varchar(50),
+	Snippet_LiveBroadcastContent varchar(max),
+	Snippet_PublishedAt datetime null,
+	Snippet_PublishedAtDateTimeOffset datetimeoffset null,
+	Snippet_PublishedAtRaw varchar(50),
+	Snippet_Title varchar(max),
+	Snippet_ThumbnailDetailsId int not null,
+	
+	Primary Key(Our_Id),
+	Foreign Key(Snippet_ThumbnailDetailsId) References Youtube_ThumbnailDetails(Our_Id)
+);
+GO
+
+Create Table Youtube_ChannelAuditDetails(
+	Our_Id int NOT NULL IDENTITY(1,1),
+	CommunityGuidelinesGoodStanding bit null,
+	ContentIdClaimsGoodStanding bit null,
+	CopyrightStrikesGoodStanding bit null,
+	ETag varchar(50),
+
+	Primary Key(Our_Id)
+);
+GO
+
+Create Table Youtube_ChannelSettings(
+	Our_Id int NOT NULL IDENTITY(1,1),
+	Country varchar(50),
+	DefaultLanguage varchar(50),
+	DefaultTab varchar(50),
+	"Description" varchar(max),
+	ETag varchar(50),
+	FeaturedChannelsTitle varchar(max),
+	FeaturedChannelsUrls varchar(max),  -- Repeated string (using comma separator)
+	Keywords varchar(8000),	        -- Repeated string (using comma separator)
+	ModerateComments bit null,
+	ProfileColor varchar(50),
+	ShowBrowseView bit null,
+	ShowRelatedChannels bit null,
+	Title varchar(max),
+	TrackingAnalyticsAccountId varchar(50),
+	UnsubscribedTrailer varchar(500),
+
+	Primary Key(Our_Id)
+);
+GO
+
+Create Table Youtube_ChannelBrandingSettings(
+	Our_Id int NOT NULL IDENTITY(1,1),
+	Our_ChannelSettingsId int NOT NULL,
+	ETag varchar(50),
+
+	Primary Key(Our_Id),
+	Foreign Key(Our_ChannelSettingsId) References Youtube_ChannelSettings(Our_Id),
+
+	-- BackgroundImageUrl:  LocalizedProperty
+	--BackgroundImageUrl_LanguageTag_ETag varchar,
+	--BackgroundImageUrl_LanguageTag_Value varchar,
+	--BackgroundImageUrl_Default__ varchar,
+	--BackgroundImageUrl_ETag varchar,
+	---- Youtube V3:  Has list of background image as List<LocalizedProperty>, so, only using the first entry.
+	--BackgroundImageUrl_Language varchar,
+	--BackgroundImageUrl_ETag varchar,
+	--BackgroundImageUrl_Localized varchar,
+
+	BannerExternalUrl varchar(8000),
+	BannerImageUrl varchar(8000),
+	BannerMobileExtraHdImageUrl varchar(8000),
+	BannerMobileHdImageUrl varchar(8000),
+	BannerMobileImageUrl varchar(8000),
+	BannerMobileLowImageUrl varchar(8000),
+	BannerMobileMediumHdImageUrl varchar(8000),
+	BannerTabletExtraHdImageUrl varchar(8000),
+	BannerTabletHdImageUrl varchar(8000),
+	BannerTabletImageUrl varchar(8000),
+	BannerTabletLowImageUrl varchar(8000),
+	BannerTvHighImageUrl varchar(8000),
+	BannerTvImageUrl varchar(8000),
+	BannerTvLowImageUrl varchar(8000),
+	BannerTvMediumImageUrl varchar(8000),
+
+	-- LargeBrandedBannerImageImapScript:  LocalizedProperty
+	--LargeBrandedBannerImageImapScript varchar,
+	--LargeBrandedBannerImageImapScript_LanguageTag_ETag varchar,
+	--LargeBrandedBannerImageImapScript_LanguageTag_Value varchar,
+	--LargeBrandedBannerImageImapScript_Default__ varchar,
+	--LargeBrandedBannerImageImapScript_ETag varchar,
+	---- Youtube V3:  Has list of background image as List<LocalizedProperty>, so, only using the first entry.
+	--LargeBrandedBannerImageImapScript_Language varchar,
+	--LargeBrandedBannerImageImapScript_ETag varchar,
+	--LargeBrandedBannerImageImapScript_Localized varchar,
+
+	---- LargeBrandedBannerImageUrl:  LocalizedProperty
+	--LargeBrandedBannerImageUrl varchar,
+	--LargeBrandedBannerImageUrl_LanguageTag_ETag varchar,
+	--LargeBrandedBannerImageUrl_LanguageTag_Value varchar,
+	--LargeBrandedBannerImageUrl_Default__ varchar,
+	--LargeBrandedBannerImageUrl_ETag varchar,
+	---- Youtube V3:  Has list of background image as List<LocalizedProperty>, so, only using the first entry.
+	--LargeBrandedBannerImageUrl_Language varchar,
+	--LargeBrandedBannerImageUrl_ETag varchar,
+	--LargeBrandedBannerImageUrl_Localized varchar,
+
+	---- SmallBrandedBannerImageImapScript:  LocalizedProperty
+	--SmallBrandedBannerImageImapScript varchar,
+	--SmallBrandedBannerImageImapScript_LanguageTag_ETag varchar,
+	--SmallBrandedBannerImageImapScript_LanguageTag_Value varchar,
+	--SmallBrandedBannerImageImapScript_Default__ varchar,
+	--SmallBrandedBannerImageImapScript_ETag varchar,
+	---- Youtube V3:  Has list of background image as List<LocalizedProperty>, so, only using the first entry.
+	--SmallBrandedBannerImageImapScript_Language varchar,
+	--SmallBrandedBannerImageImapScript_ETag varchar,
+	--SmallBrandedBannerImageImapScript_Localized varchar,
+
+	TrackingImageUrl varchar(8000),
+	WatchIconImageUrl varchar(8000),
+);
+GO
+
+Create Table Youtube_ChannelSnippet(
+
+	Our_Id int not null IDENTITY(1,1),
+	Country varchar(50),
+	CustomUrl varchar(max),
+	DefaultLanguage varchar(50),
+	"Description" varchar(max),
+	ETag varchar(50),
+	Localized_Description varchar(max),		-- NOTE: Different entity than other snippets "ChannelLocalization"
+	Localized_ETag varchar(50),				-- NOTE: Different entity than other snippets "ChannelLocalization"
+	Localized_Title varchar(max),			-- NOTE: Different entity than other snippets "ChannelLocalization"
+	PublishedAt datetime null,
+	PublishedAtDateTimeOffset datetimeoffset null,
+	PublishedAtRaw varchar(50),
+	-- Tags (skipped) Should be part of call for video list detail
+	ThumbnailDetailsId int not null, 
+	Title varchar(max),
+
+	Primary Key(Our_Id),
+	Foreign Key(ThumbnailDetailsId) References Youtube_ThumbnailDetails(Our_Id)
+
+);
+
+Create Table Youtube_Channel(
+	Our_ChannelAuditDetailsId int NOT NULL,
+	Our_ChannelBrandingSettingsId int NOT NULL,
+	Our_SnippetId int NOT NULL,
+	ETag varchar(50),
+	Id varchar(50) NOT NULL,
+	Kind varchar(50),
+
+	Primary Key (Id),
+	Foreign Key (Our_ChannelAuditDetailsId) References Youtube_ChannelAuditDetails(Our_Id),
+	Foreign Key (Our_ChannelBrandingSettingsId) References Youtube_ChannelBrandingSettings(Our_Id),
+	Foreign Key (Our_SnippetId) References Youtube_ChannelSnippet(Our_Id),
+
+	-- ContentDetails: ChannelContentDetails
+	ChannelContentDetails_ETag varchar(50),
+	ChannelContentDetails_RelatedPlaylistsData_Favorites varchar(500),
+	ChannelContentDetails_RelatedPlaylistsData_Likes varchar(500),
+	ChannelContentDetails_RelatedPlaylistsData_Uploads varchar(500),
+	ChannelContentDetails_RelatedPlaylistsData_WatchHistory varchar(500),
+	ChannelContentDetails_RelatedPlaylistsData_WatchLater varchar(500),
+
+	-- ContentOwner: ContentOwnerDetails
+	ContentOwnerDetails_ContentOwner varchar(50),	-- Primary Handle location (to create user table)
+	ContentOwnerDetails_ETag varchar(50),
+	ContentOwnerDetails_TimeLinked datetime,
+	ContentOwnerDetails_TimeLinkedDateTimeOffset datetimeoffset,
+	ContentOwnerDetails_TimeLinkedRaw varchar(50),
+
+	-- Localizations varchar, -- Dictionary<string, ChannelLocalization>
+
+	-- Statistics: ChannelStatistics
+	Statistics_CommentCount bigint null,
+	Statistics_ETag varchar(50),
+	Statistics_HiddenSubscriberCount bit null,
+	Statistics_SubscriberCount bigint null,
+	Statistics_VideoCount bigint null,
+	Statistics_ViewCount bigint null,
+
+	-- Status: ChannelStatus
+	Status_ETag varchar(50),
+	Status_IsLinked bit null,
+	Status_LongUploadsStatus varchar(50),
+	Status_MadeForKids bit null,
+	Status_PrivacyStatus varchar(50),
+	Status_SelfDeclaredMadeForKids bit null,
+	
+	-- TopicDetails: ChannelTopicDetails (Topic Categories, Topic Ids)
+	--
+	-- Topic Categories: A list of Wikipedia URLs that describe the channel's content.
+	-- Topic ID's: A list of Freebase topic IDs associated with the channel. 
+	--			   You can retrieve information about each topic using the Freebase Topic API.
+	ChannelTopicDetails_ETag varchar(50)
+);
+GO
+
+Create Table Youtube_ChannelConversationPing(
+	Our_Id int NOT NULL IDENTITY(1,1),
+	Our_ChannelId varchar(50) NOT NULL,
+	Context varchar(8000),
+	ConversionUrl varchar(8000),
+	ETag varchar(50),
+
+	Primary Key (Our_Id),
+	Foreign Key (Our_ChannelId) References Youtube_Channel(Id)
+);
+GO
+
+Create Table Youtube_VideoStatistics(
+
+	Our_Id int not null IDENTITY(1,1),
+	ETag varchar(50),
+	CommentCount bigint null,
+	DislikeCount bigint null,
+	FavoriteCount bigint not null,
+	LikeCount bigint not null,
+	ViewCount bigint not null,
+
+	Primary Key(Our_Id)
+);
+GO
+
+Create Table Youtube_VideoStatus(
+
+	Our_Id int not null IDENTITY(1,1),
+	ETag varchar(50),
+	Embeddable bit null,
+	FailureReason varchar(max),
+	License varchar(max),
+	MadeForKids bit null,
+	PrivacyStatus varchar(100),
+	PublicStatsViewable bit null,
+	PublishAt datetime null,
+	PublishAtDateTimeOffset datetimeoffset null,
+	PublishAtRaw varchar(100),
+	RejectionReason varchar(max),
+	SelfDeclaredMadeForKids bit null,
+	UploadStatus varchar(100),
+	"Description" varchar(max),
+
+	Primary Key(Our_Id)
+);
+GO
+
+Create Table Youtube_VideoSnippet(
+
+	Our_Id int not null IDENTITY(1,1),
+	CategoryId varchar(50),
+	ChannelId varchar(50),
+	ChannelTitle varchar(max),
+	DefaultAudioLanguage varchar(50),
+	DefaultLanguage varchar(50),
+	"Description" varchar(max),
+	ETag varchar(50),
+	LiveBroadcastContent varchar(50),
+	Localized_Description varchar(max),
+	Localized_ETag varchar(50),
+	Localized_Title varchar(max),
+	PublishedAt datetime null,
+	PublishedAtDateTimeOffset datetimeoffset null,
+	PublishedAtRaw varchar(50),
+	-- Tags (skipped) Should be part of call for video list detail
+	ThumbnailDetailsId int not null,
+	Title varchar(max),
+
+	Primary Key(Our_Id),
+	Foreign Key(ThumbnailDetailsId) References Youtube_ThumbnailDetails(Our_Id)
+);
+
+Create Table Youtube_Video(
+
+	Id varchar(50) not null,
+	Kind varchar(50),
+	ETag varchar(50),
+
+	SnippetId int not null,
+	StatisticsId int not null,
+	StatusId int not null,
+
+	AgeGating_AlcoholContent bit null,
+	AgeGating_ETag varchar(50),
+	AgeGating_Restricted bit null,
+	AgeGating_VideoGameRating varchar(50),
+
+	-- ContentDetails: VideoContentDetails
+	ContentDetails_Caption varchar(max),
+	-- ContentDetails.ContentRating:  ContentDetails_ContentRating (many localization fields) (skipped)
+	-- ConetntDetails.CountryRestriction:  ContentDetails_CountryRestriction (skipped)
+	ContentDetails_Definition varchar(50),
+	ContentDetails_Dimension varchar(50),
+	ContentDetails_Duration varchar(50),
+	ContentDetails_ETag varchar(50),
+	ContentDetails_HasCustomThumbnail bit null,
+	ContentDetails_LicensedContent bit null,
+	ContentDetails_Projection varchar(50),
+
+	--ContentDetails: VideoContentDetailsRegionRestricction
+	ContentDetails_RegionRestriction_ETag varchar(50),
+
+	-- VideoDetails: VideoFileDetails (skipped)
+	-- LiveStreamingDetails: VideoLiveStreamingDetails (skipped)
+	-- Localizations:  Dictionary<string, VideoLocalization> (skipped)
+
+	-- MonetizationDetails: VideoMonetizationDetails
+	MonetizationDetails_AccessPolicy_Allowed bit null, -- (skipped some of the region / localization detail)
+
+	-- Player: VideoPlayer (skipped) Didn't seem useful, just some html embed details
+	-- ProcessingDetails: VideoProcessingDetails (skipped) used for real time processing. No preview thumbnail.
+	-- ProjectDetails: VideoProjectDetails (skipped) See Youtube API reference, experimental field, "in the wild".
+	-- RecordingDetails: VideoRecordingDetails (skipped)
+	-- Suggestions: VideoSuggestions (skipped)
+	
+	-- TopicDetails: VideoTopicDetails
+	TopicDetails_ETag varchar(50),
+
+	Primary Key(Id),
+	Foreign Key(SnippetId) References Youtube_VideoSnippet(Our_Id),
+	Foreign Key(StatisticsId) References Youtube_VideoStatistics(Our_Id),
+	Foreign Key(StatusId) References Youtube_VideoStatus(Our_Id),
+);
+GO
+
+Create Table Youtube_CommentSnippet(
+
+	AuthorChannelId_Value varchar(50),
+	AuthorChannelId_ETag varchar(50),
+	AuthorChannelUrl varchar(8000),
+	AuthorDisplayName varchar(100),
+	AuthorProfileImageUrl varchar(8000),
+	CanRate bit null,
+	ChannelId varchar(50),
+	ETag varchar(50),
+	LikeCount bigint null,
+	ModerationStatus varchar(50),
+	ParentId varchar(50) NOT NULL,
+	PublishedAt DateTime,
+	PublishedAtDateTimeOffset DateTimeOffset,
+	PublishedAtRaw varchar(50),
+	TextDisplay varchar(max),
+	TextOriginal varchar(max),
+	UpdatedAt DateTime,
+	UpdatedAtDateTimeOffset DateTimeOffset,
+	UpdatedAtRaw varchar(50),
+	VideoId varchar(50),
+	ViewerRating varchar(50),
+
+	Primary Key(ParentId)
+);
+GO
+
+Create Table Youtube_Comment(
+	Id varchar(50) NOT NULL,
+	ETag varchar(50),
+	Kind varchar(50)
+
+	Primary Key(Id)
+	Foreign Key(Id) References Youtube_CommentSnippet(ParentId)
+);
+GO
+
+Create Table Youtube_CommentThreadSnippet(
+
+	Our_Id int not null IDENTITY(1,1),
+	ChannelId varchar(50) not null,
+	TopLevelCommentId varchar(50) not null,
+	VideoId varchar(50) not null,
+	ETag varchar(50),
+	IsPublic bit null,
+	TotalReplyCount bigint null,
+	
+	Primary Key(Our_Id),
+	Foreign Key(ChannelId) References Youtube_Channel(Id),
+	Foreign Key(VideoId) References Youtube_Video(Id),
+	Foreign Key(TopLevelCommentId) References Youtube_Comment(Id)
+	
+);
+GO
+
+Create Table Youtube_CommentThread(
+	Id varchar(50) NOT NULL,
+	ETag varchar(50),
+	Kind varchar(50),
+	ThreadSnippetId int NOT NULL,
+
+	Primary Key(Id),
+	Foreign Key(ThreadSnippetId) References Youtube_CommentThreadSnippet(Our_Id)
+);
+GO
+
+Create Table Youtube_CommentListMap(
+	Our_Id int NOT NULL IDENTITY(1,1),
+	CommentThreadId varchar(50) NOT NULL,
+	CommentId varchar(50) NOT NULL,
+	-- ETag varchar(50), Skipping because of mapping table. There should probably be a slight change for YT's ETag junk.
+
+	Primary Key(Our_Id),
+	Foreign Key(CommentThreadId) References Youtube_CommentThread(Id),
+	Foreign Key(CommentId) References Youtube_Comment(Id)
+);
+GO
+
+Create Table Youtube_TopicCategory(
+	Our_Id int not null IDENTITY(1,1),
+	"Url" varchar(900) not null,
+	ChannelId varchar(50) null, -- Treated as a loose foreign key to Youtube_Channel.Id
+	VideoId varchar(50) null,   -- Treated as a loose foreign key to Youtube_Video.Id
+
+	Primary Key(Our_Id)
+);
+GO
+
+Create Table Youtube_TopicId(
+	Our_Id int not null IDENTITY(1,1),
+	"Url" varchar(900) not null,
+	ChannelId varchar(50) null, -- Treated as a loose foreign key to Youtube_Channel.Id
+	VideoId varchar(50) null,   -- Treated as a loose foreign key to Youtube_Video.Id
+	Relevant bit not null,		-- Youtube_Video field, used to mark relevant topics for the video entity 
+
+	Primary Key("Url")
+);
+GO
+
+Create Table Youtube_RegionRestriction(
+	Our_Id int not null IDENTITY(1,1),
+	VideoId varchar(50) not null,
+	Region varchar(50),
+	Blocked bit not null
+
+	Primary Key(Our_Id),
+	Foreign Key(VideoId) References Youtube_Video(Id)
+);
+GO
+
+Create Table Youtube_Tag(
+	Our_Id int not null Identity(1,1),
+	VideoId varchar(50) not null,
+	Tag varchar(150) not null,
+
+	Primary Key(Our_Id),
+	Foreign Key(VideoId) References Youtube_Video(Id)
+);
+GO
+
+Create Table Youtube_Playlist(
+
+	Id varchar(50) not null,
+	Kind varchar(50),
+	ETag varchar(50),
+	
+	PlaylistSnippet_ChannelId varchar(50) not null,
+	PlaylistSnippet_ChannelTitle varchar(max),
+	PlaylistSnippet_ChannelDescription varchar(max),
+	PlaylistSnippet_PublishedAtDateTimeOffset datetimeoffset null,
+	PlaylistSnippet_Title varchar(max),
+	PlaylistSnippet_ThumnailDetails_Id int not null,
+	
+	Primary Key(Id),
+	Foreign Key(PlaylistSnippet_ChannelId) References Youtube_Channel(Id),
+	Foreign Key(PlaylistSnippet_ThumnailDetails_Id) References Youtube_ThumbnailDetails(Our_Id),
+);
+GO
+
+Create Table Youtube_PlaylistItem(
+	
+	Id varchar(50) not null,
+	ETag varchar(50),
+	Kind varchar(50),
+	
+	PlaylistContentDetails_ETag varchar(50),
+	PlaylistContentDetails_Note varchar(max),
+	PlaylistContentDetails_VideoId varchar(50) null, -- Nullable because it won't yet be part of the Video data (youtube service issue)
+	PlaylistContentDetails_VideoPublishedAtDateTimeOffset datetimeoffset null,
+	
+	PlaylistItemSnippet_ChannelId varchar(50),
+	PlaylistItemSnippet_ETag varchar(50),
+	PlaylistItemSnippet_ChannelTitle varchar(max),
+	PlaylistItemSnippet_Description varchar(50),
+	PlaylistItemSnippet_PlaylistId varchar(50) not null,
+	PlaylistItemSnippet_Position bigint null,
+	PlaylistItemSnippet_PublishedAtDateTimeOffset datetimeoffset null,
+	PlaylistItemSnippet_ThumbnailDetails_Id int not null,
+	PlaylistItemSnippet_Title varchar(max),
+	PlaylistItemSnippet_VideoOwnerChannelId varchar(50),
+	PlaylistItemSnippet_VideoOwnerChannelTitle varchar(max),
+	
+	PlaylistItemStatus_PrivacyStatus varchar(50),
+	
+	Primary Key(Id),
+	-- Foreign Key(PlaylistContentDetails_VideoId) References Youtube_Video(Id),
+	Foreign Key(PlaylistItemSnippet_ChannelId) References Youtube_Channel(Id),
+	Foreign Key(PlaylistItemSnippet_PlaylistId) References Youtube_Playlist(Id),
+	Foreign Key(PlaylistItemSnippet_ThumbnailDetails_Id) References Youtube_ThumbnailDetails(Our_Id),
+	Foreign Key(PlaylistItemSnippet_VideoOwnerChannelId) References Youtube_Channel(Id)
+	
+);
+GO

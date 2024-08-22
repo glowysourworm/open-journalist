@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="OpenJournalist.View.PlatformSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
+    <Grid>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Platform Connection"
+                   Margin="5, 5"
+                   FontSize="20"
+                   Foreground="DimGray"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left" />
+
+        <ComboBox x:Name="PlatformCB" 
+                   Grid.Column="1"
+                   Margin="5" 
+                   Width="180" 
+                   Height="32"
+                   FontSize="14" 
+                   SelectionChanged="PlatformCB_SelectionChanged"
+                   VerticalAlignment="Center">
+            <ComboBoxItem Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Height="25">
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Center" Stretch="Uniform" Source="pack://application:,,,/OpenJournalist;component/Images/local.png" />
+                    <TextBlock Margin="5, 0, 0, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="DimGray" Text="Local DB" />
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Height="25">
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Center" Stretch="Uniform" Source="pack://application:,,,/OpenJournalist;component/Images/youtube.png" />
+                    <TextBlock Margin="5, 0, 0, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="DimGray" Text="Youtube" />
+                </StackPanel>
+            </ComboBoxItem>
+            <ComboBoxItem Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Height="25">
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Center" Stretch="Uniform" Source="pack://application:,,,/OpenJournalist;component/Images/rumble.png" />
+                    <TextBlock Margin="5, 0, 0, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="DimGray" Text="Rumble" />
+                </StackPanel>
+            </ComboBoxItem>
+        </ComboBox>
+        
+        
+        
+    </Grid>
+</UserControl>
