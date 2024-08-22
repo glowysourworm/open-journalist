@@ -1,4 +1,4 @@
-# youtube-journalist
+# open-journalist
 Youtube management application with features for journalists
 
     1) Search / Query for youtube media to expand listening landscape (includes Channel, Video,
